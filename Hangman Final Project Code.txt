@@ -185,7 +185,7 @@ public class Hangman { // class declaration, average 0(1) time for insertion/ret
     private boolean isGameWon() {
         return String.valueOf(guessedWord).equals(selectedWord.replace(" ", "_")); // Return true if the guessed word matches the selected word
     }
-	//*******************************************************************************/
+    //******************************************************************************/
 
     // Method to run the game, iterative input loop algorithm start, repeatedly takes input from user until a condition is met
     public void playGame() {
