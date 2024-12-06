@@ -2,6 +2,13 @@
 //Jonathan Her
 //12-6-24
 
+//Gregory Hogan
+//11-27-24
+//Hangman 
+//Code Version 2.0
+//Source code
+//Professor at Merced College
+
 import java.util.HashMap; // Importing HashMap for storing words and hints
 import java.util.Random; // Importing Random for generating random numbers
 import java.util.Scanner; // Importing Scanner for user input
@@ -174,9 +181,11 @@ public class Hangman { // class declaration, average 0(1) time for insertion/ret
     }
 
     // Method to check if the game is won
+    //******************************************************************************
     private boolean isGameWon() {
         return String.valueOf(guessedWord).equals(selectedWord.replace(" ", "_")); // Return true if the guessed word matches the selected word
     }
+	//*******************************************************************************/
 
     // Method to run the game, iterative input loop algorithm start, repeatedly takes input from user until a condition is met
     public void playGame() {
