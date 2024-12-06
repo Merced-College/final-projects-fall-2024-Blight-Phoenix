@@ -1,0 +1,226 @@
+//Hangman Final Project
+//Jonathan Her
+//12-6-24
+
+import java.util.HashMap; // Importing HashMap for storing words and hints
+import java.util.Random; // Importing Random for generating random numbers
+import java.util.Scanner; // Importing Scanner for user input
+import java.util.Stack;  // Importing Stack for tracking guessed words
+
+public class Hangman { // class declaration, average 0(1) time for insertion/retrieval operations, efficient for storing/accessing words and hints
+    private HashMap<String, String> wordHints; // Using a HashMap to store words and their hints; private = keyword
+    private String selectedWord; // The word selected for the game
+    private String hint; // The hint for the selected word
+    private char[] guessedWord; // The current state of the guessed word
+    private int attemptsLeft; // Number of attempts the player has left
+    private int lettersGuessed; // Number of letters guessed by the player
+    private int wordsGuessedRight; // Number of words guessed correctly by the player
+    private Stack<String> guessedWords; // Stack to keep track of correctly guessed words
+
+    // Constructor to initialize the game, iterative initialization algorithm start, method, initial guess for solution is repeatedly refined through series of steps
+    public Hangman() {
+        wordHints = new HashMap<String, String>(); // Creating the HashMap, allows easy addition of new words and hints, making the game easy to extend
+        // Adding words and their hints to the HashMap
+        
+        wordHints.put("java", "A programming language");
+        wordHints.put("hangman", "A word guessing game");
+        wordHints.put("algorithm", "A step-by-step procedure for solving a problem");
+        wordHints.put("apple", "a food that doctors love");
+        wordHints.put("dreams", "a feeling that you have when you are sleeping");
+        wordHints.put("tomato", "found in sandwiches");
+        wordHints.put("pineapple", "a fruit that is yellow");
+        wordHints.put("mouse", "a small animal or an accessory to a computer");
+        wordHints.put("keyboard", "a small piece of hardware that allows you to type");
+        wordHints.put("monitor", "a small piece of hardware that allows you to see");
+        wordHints.put("christmas", "the most wonderful time of the year");
+        wordHints.put("cheeseburger", "a food that was made in america");
+        wordHints.put("french fries", "a food that goes well with a burger");
+        wordHints.put("ice cream", "a cold treat");
+        wordHints.put("cellphone", "somethiing we can't live without");
+        wordHints.put("water", "something every living organism needs to survive");
+        wordHints.put("night city", "where legends are born (Cyberpunk2077 reference)");
+        wordHints.put("ghost", "a supernatural being");
+        wordHints.put("disneyland", "the happiest place on Earth");
+        wordHints.put("batman", "a DC superhero who's power is being rich");
+        wordHints.put("wonderwoman", "a DC superoheroine played by Gal Gadot");
+        wordHints.put("the incrdible hulk", "a Marvel superhero who likes to smash things");
+        wordHints.put("johnny silverhand", "a fictional character from the cyberpunk universe that Keaunu Reeves plays");
+        wordHints.put("spiderman", "Tom Holland, Andrew Garfield, and Tobey Maguire played this character");
+        wordHints.put("black widow", "a type of creature that has an hourglass or AKA Natasha Romanoff");
+        wordHints.put("onepiece", "the anime that never ends");
+        wordHints.put("vegeta", "Goku's rival in Dragon Ball Z");
+        wordHints.put("supernova", "a song by AESPA or a star exploding");
+        wordHints.put("xenomorph", "a type of alien creature that Sigourney Weaver fights");
+        wordHints.put("the predator", "hunts xenomorphs, creatues and humans for sport");
+        wordHints.put("anakin skywalker", "AKA Darth Vader");
+        wordHints.put("ahsoka tano", "Anakin's young padawan from the Clone Wars");
+        wordHints.put("darth maul", "Qui-Gon Jinn was a victim of this evil sith lord");
+        wordHints.put("english", "the most spoken language in the world");
+        wordHints.put("i really want to stay at your house", "a song that causes depression/sadness from the anime: Cyberpunk Edgrunners");
+        wordHints.put("grand theft auto 6", "one of the most hyped games of all time");
+        wordHints.put("Hydra", "a mythical creature that grows an additional head after being severed");
+        wordHints.put("john wick", "a fictional chaacter who's dog is killed played by Keanu Reeves");
+        wordHints.put("myspace", "a social media platform that only 90s or 2000s kids will remember");
+        wordHints.put("music", "Everyone loves listening to this");
+        wordHints.put("aquaman", "a DC superhero who loves water");
+        wordHints.put("school", "a place some would consider a prison, whjile others see opportunity");
+        wordHints.put("video games", "chances are, you got into programming because of this");
+        wordHints.put("persephone", "the wife of Hades");
+        wordHints.put("cerberus", "a mythical creature that guards the underworld");
+        wordHints.put("robin", "batman's sidekick");
+        wordHints.put("batgirl", "a tech genius who works along side Batman under the alias Oracle");
+        wordHints.put("zombies", "a fictional creature that attacks in hordes and devours anything living");
+        wordHints.put("vampire", "a fictional creature that hates onions and the sun");
+        wordHints.put("gohan", "Goku's son");
+        wordHints.put("trunks", "Vegeta's son");
+        wordHints.put("bulma", "Vegeta's wife");
+        wordHints.put("alfred", "Batman's trusty butler");
+        wordHints.put("kanemoto", "a computer science professor from Merced College");
+        wordHints.put("hogan", "a computer science professor from Merced College");
+        wordHints.put("yuffie", "a character from the game Final Fanatasy 7 who is known for her ninja like appearance");
+        wordHints.put("cloud", "the main character of Final Fanatasy 7");
+        wordHints.put("tifa lockhart", "Cloud's childhood friend from Midgard in Final Fantasy 7");
+        wordHints.put("aerith", "the flower girl from Final Fantasy 7");
+        wordHints.put("scarlet", "an enemy of Cloud's group from Final Fantasy 7 or a shade of red");
+        wordHints.put("arasaka", "a shady corporation from the world of Cyberpunk 2077 run by a man named Saburo");
+        wordHints.put("honoko", "Saburo Arasaka's daughter from the Cyberpunk 2077");
+        wordHints.put("yorinobu", "Saburo Arasaka's son from Cyberpunk 2077");
+        wordHints.put("nova", "cyberpunk slang for cool");
+        wordHints.put("preem", "cyberpunk slang for good");
+        wordHints.put("eddies", "cyberpunk slang for money");
+        wordHints.put("gonk", "cyberpunk slang for dumb/stupid");
+        wordHints.put("chrome", "cyberpunk slang for various augments that can be added or infused to your body in Cyberpunk 2077");
+        wordHints.put("lizzy wizzy", "a character from Cyberpunk 2077 who is known for being a pop star");
+        wordHints.put("adam smasher", "a night city legend from Cyberpunk 2077 who is known for his unrelenting brutality");
+        wordHints.put("david martinez", "the main character from the anime series: Cyberpunk Edgerunners");
+        wordHints.put("lucy", "a skilled netrunner from the Cyberpunk Edgerunners anime and also David's love interest");
+        wordHints.put("tyger claws", "one gang faction of Cyberpunk 2077 that resides in Night City known for being of Japanese origin");
+        wordHints.put("maelstrom", "one gang faction of Cyberpunk 2077 that resides in Night City, known for being chromed up");
+        wordHints.put("animals", "one gang faction of Cyberpunk 2077 that resides in Night City, known for being really muscular");
+        wordHints.put("nomads", "a faction from Cyberpunk 2077 that are known for their close family bonds");
+        wordHints.put("edgerunner", "another name for a merc from Cyberpunk 2077");
+        wordHints.put("gacha game", "a type of game where players spend money on banners for either charcters or weapons");
+        wordHints.put("master chief", "a legendary spartan from the Halo series");
+        wordHints.put("cortana", "Master Chief's AI companion");
+        wordHints.put("the flood", "a zombie like parasite that infects other living organisms from the Halo games");
+        wordHints.put("halo", "Bungie's most popular game series dating all the way back to the early 2000s");
+        wordHints.put("lara croft", "the main character from the Tomb Raider series");
+        wordHints.put("trinity", "the organization that Lara Croft is going against");
+        wordHints.put("stellar blade", "a korean based game in which the main protagonist's name is Eve");
+        wordHints.put("silent hill 2", "a japanese based game in which James searches a certain town for his wife Mary");
+        wordHints.put("mortal kombat", "a fighting game in which gore is the focus of the game");
+        wordHints.put("john cena", "legend has it, people have a difficult time seeing him or AKA Peacemaker");
+        wordHints.put("tekken", "a fighting game in which there is a character who wears a jaguar mask named King");
+        wordHints.put("final fantasy", "one of Square Enix's most popular game franchises, especially number 7 in the series");
+        wordHints.put("checkpoints", "many games have this mechanic that saves the player from starting over again");
+        wordHints.put("concord", "the most hated game of 2024 with a budget of around 400 million dollars");
+        wordHints.put("censorship", "anime fans despise this word and any mention of it");
+        wordHints.put("one piece", "one of the longest ongoing anime's of all time, with over 1000 episodes in the series");
+        wordHints.put("chainsaw man", "an anime series in which there are two characters named Makima and Power");
+        wordHints.put("naruto", "an anime series which popularized a specific type of run");
+        wordHints.put("death note", "an anime series in which exists a book that kills anyone whose name is written in it");
+        wordHints.put("one punch man", "an anime series in which a character named Saitama destroys everything in one hit");
+        wordHints.put("wolverine", "a type of animal with sharp claws that lives in snowy environments or a Marvel superhero");
+        wordHints.put("blade", "a marvel superhero that is also a vampire themselves, but they hunt and kill other vampires");
+        wordHints.put("atlantis", "a mythological city located said to be located underneath the ocean");
+        wordHints.put("hoyoverse", "the company behind these 3 gacha games: Honkai Star Rail, Honkai 3rd Impact and Genshin Impact");
+
+        lettersGuessed = 0; // Initialize letters guessed to 0
+        wordsGuessedRight = 0; // Initialize words guessed right to 0
+        guessedWords = new Stack<>(); // Initialize the stack for guessed words
+        resetGame(); // Initialize the game state; variables updated throughout the game to manage game state and provide player feedback
+    } // iterative initialization algorithm end
+
+    // Method to select a random word from the HashMap
+    private void selectRandomWord() {
+        Object[] keys = wordHints.keySet().toArray(); // Get all keys (words) from the HashMap
+        Random random = new Random(); // Creating a Random object
+        selectedWord = (String) keys[random.nextInt(keys.length)]; // Selecting a random word; length)]).toLowerCase();
+        hint = wordHints.get(selectedWord); // Getting the hint for the selected word
+    }
+
+    // Method to reset the game state
+    private void resetGame() {
+        selectRandomWord(); // Select a random word from the HashMap
+        attemptsLeft = 5; // Setting the number of attempts
+        guessedWord = new char[selectedWord.length()]; // Initializing guessedWord array
+        for (int i = 0; i < guessedWord.length; i++) { // Filling the guessedWord with underscores
+            guessedWord[i] = '_'; // Representing unguessed letters with '_'
+        }
+    }
+
+    // Method to display the current state of the guessed word
+    private void displayGuessedWord() {
+        System.out.print("Current Word: ");
+        for (char letter : guessedWord) { // Iterating through the guessedWord array
+            System.out.print(letter + " "); // Displaying each letter with space
+        }
+        System.out.println(); // New line after displaying the word
+    }
+
+    // Method to check if the guessed letter is in the selected word
+    private boolean checkGuess(char guess) {
+        boolean isCorrect = false; // To track if the guess is correct
+        for (int i = 0; i < selectedWord.length(); i++) { // Iterating through the selected word
+            if (selectedWord.charAt(i) == guess) { // If the guessed letter matches
+                guessedWord[i] = guess; // Update guessedWord with the correct letter
+                isCorrect = true; // Set isCorrect to true
+            }
+        }
+        if (isCorrect) { // If the guess is correct
+            lettersGuessed++; // Increment letters guessed
+        }
+        return isCorrect; // Returning whether the guess was correct
+    }
+
+    // Method to check if the game is won
+    private boolean isGameWon() {
+        return String.valueOf(guessedWord).equals(selectedWord.replace(" ", "_")); // Return true if the guessed word matches the selected word
+    }
+
+    // Method to run the game, iterative input loop algorithm start, repeatedly takes input from user until a condition is met
+    public void playGame() {
+        Scanner scanner = new Scanner(System.in); // Creating a Scanner for user input
+        System.out.println("Welcome to Hangman!"); // Greeting the player
+
+        while (true) { // Loop until the player decides to quit
+            System.out.println("Hint: " + hint); // Displaying the hint
+            while (attemptsLeft > 0) { // Loop until the player runs out of attempts or wins the game
+                displayGuessedWord(); // Display the current state of the guessed word
+                System.out.println("Attempts left: " + attemptsLeft); // Show attempts left
+                System.out.print("Enter a letter: "); // Prompt the player to enter a letter
+                char guess = scanner.next().charAt(0); // Read the user's guess; Character.toLowerCase
+
+                // input validation algorithm, ensures data entered is accurate and in correct format and consistent
+                if (checkGuess(guess)) { // Check if the guess is correct
+                    System.out.println("Good guess!"); // Inform the player of a correct guess
+                } else {
+                    attemptsLeft--; // Decrease attempts left for an incorrect guess
+                    System.out.println("Wrong guess!"); // Inform the player of an incorrect guess
+                } // end of input validation algorithm
+
+                if (isGameWon()) { // Check if the game is won
+                    wordsGuessedRight++; // Increment words guessed right
+                    guessedWords.push(selectedWord); // Push the guessed word onto the stack
+                    System.out.println("Congratulations! You've guessed the word: " + selectedWord); // Victory message
+                    break; // Exit the inner loop to reset the game
+                }
+            }
+
+            if (!isGameWon()) { // Check if the game is lost
+                System.out.println("Game over! The word was: " + selectedWord); // Game over message
+            }
+
+            System.out.println("Scoreboard: Letters guessed = " + lettersGuessed + ", Words guessed right = " + wordsGuessedRight); // Display score board
+            System.out.println("Words guessed correctly: " + guessedWords); // Display the contents of the stack
+            System.out.print("Do you want to play again? (yes/no): "); // Prompt to play again
+            String response = scanner.next().toLowerCase(); // used to capture the user's input, convert it to lower case, and store it in the variable response
+            if (!response.equals("yes")) { // Exit if the player does not want to play again
+                break;
+            }
+            resetGame(); // Reset the game state for a new game
+        } // iterative input loop algorithm end
+
+        scanner.close(); // Close the scanner
+    }
+} // end main
